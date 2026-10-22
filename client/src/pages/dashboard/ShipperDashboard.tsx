@@ -24,6 +24,7 @@ import {
   PaymentStatus,
   MilestoneType
 } from '@loadvanta/contracts';
+import { LiveTripMap } from '../../components/maps/LiveTripMap';
 
 export const ShipperDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -494,6 +495,15 @@ export const ShipperDashboard: React.FC = () => {
                     </div>
                   </div>
 
+                  {/* Google Maps Live Highway Tracking */}
+                  <LiveTripMap
+                    pickupCity={b.shipmentId?.pickupCity || 'Bathinda'}
+                    deliveryCity={b.shipmentId?.deliveryCity || 'Delhi'}
+                    currentMilestoneLocation={b.milestones?.[b.milestones.length - 1]?.location}
+                    truckRegistration={b.vehicleId?.registrationNumber}
+                    status={b.status}
+                  />
+
                   {/* Trip Timeline Milestones */}
                   <div>
                     <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
@@ -518,6 +528,28 @@ export const ShipperDashboard: React.FC = () => {
                       ))}
                     </div>
                   </div>
+
+                  {/* Verified Proof of Delivery (POD) Display */}
+                  {b.deliveryProof && (
+                    <div className="p-4 bg-green-50 dark:bg-green-950/40 rounded-2xl border border-green-200 dark:border-green-800 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2 text-green-800 dark:text-green-300 font-bold text-xs">
+                          <CheckCircle2 className="w-4 h-4 text-green-600" />
+                          <span>Signed Proof of Delivery (POD) Verified</span>
+                        </div>
+                        <span className="text-[10px] bg-green-600 text-white font-bold px-2 py-0.5 rounded-full uppercase">
+                          Delivered & Verified
+                        </span>
+                      </div>
+                      <div className="text-xs text-slate-700 dark:text-slate-300 space-y-1 pt-1">
+                        <div>Receiver / Consignee: <strong>{b.deliveryProof.receiverName}</strong></div>
+                        {b.deliveryProof.notes && <div>Remarks: <em>"{b.deliveryProof.notes}"</em></div>}
+                        <div className="text-[10px] text-slate-400">
+                          Uploaded on: {new Date(b.deliveryProof.uploadedAt).toLocaleString()}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

@@ -104,37 +104,49 @@ export const HomePage: React.FC = () => {
 
   return (
     <div className="space-y-16 lg:space-y-24">
-      {/* 1. HERO SECTION */}
-      <section className="relative overflow-hidden pt-12 pb-20 bg-gradient-to-b from-orange-50/50 via-white to-slate-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* 1. HERO SECTION WITH AESTHETIC VEHICLE BACKGROUND */}
+      <section className="relative overflow-hidden pt-16 pb-24 min-h-[660px] flex items-center justify-center">
+        {/* Background Commercial Truck Image */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src="/images/hero-truck.jpg"
+            alt="Loadvanta Commercial Logistics Truck on Highway"
+            className="w-full h-full object-cover object-center filter saturate-125 contrast-110 brightness-100 dark:brightness-85 transition-all duration-300"
+          />
+          {/* Subtle translucent gradient: keeps truck colors punchy and clear without heavy washout */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white/35 via-white/15 to-white/55 dark:from-slate-950/65 dark:via-slate-950/50 dark:to-slate-950/85 transition-colors duration-300" />
+          <div className="absolute inset-0 bg-radial-at-center from-white/40 via-transparent to-transparent dark:from-slate-950/40 pointer-events-none" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="text-center max-w-3xl mx-auto space-y-6">
-            <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-orange-100 dark:bg-orange-950/60 text-brand-orange text-xs font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-brand-orange/20 border border-orange-300 dark:border-brand-orange/40 text-brand-orange text-xs font-black uppercase tracking-wider backdrop-blur-md shadow-sm">
               <RefreshCw className="w-3.5 h-3.5" />
               <span>Smart Return-Load Matching for Punjab & North India</span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-brand-navy dark:text-white tracking-tight leading-tight">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-950 dark:text-white tracking-tight leading-tight drop-shadow-[0_2px_8px_rgba(255,255,255,0.9)] dark:drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
               Move Smarter. Haul More.{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-amber-500">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-amber-500 dark:to-amber-400">
                 Earn Better.
               </span>
             </h1>
 
-            <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-300 font-normal leading-relaxed">
+            <p className="text-lg sm:text-xl text-slate-900 dark:text-slate-100 font-bold leading-relaxed drop-shadow-[0_1px_4px_rgba(255,255,255,0.95)] dark:drop-shadow-[0_1px_6px_rgba(0,0,0,0.95)]">
               Connect directly with verified truck owners and shippers across Punjab. Cut empty return trips, eliminate broker delays, and track every load from loading dock to delivery.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
               <Link
                 to="/find-trucks"
-                className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-semibold text-base shadow-lg shadow-orange-500/20 flex items-center justify-center space-x-2 transition-all transform hover:-translate-y-0.5"
+                className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-semibold text-base shadow-xl shadow-orange-500/30 flex items-center justify-center space-x-2 transition-all transform hover:-translate-y-0.5"
               >
                 <span>Find a Truck</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 to="/find-loads"
-                className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-brand-navy hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white font-semibold text-base border border-slate-700/40 flex items-center justify-center space-x-2 transition-all"
+                className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-white/95 hover:bg-white text-slate-800 dark:bg-slate-900/80 dark:hover:bg-slate-800 dark:text-white font-semibold text-base border border-slate-300 dark:border-slate-700/60 backdrop-blur-md flex items-center justify-center space-x-2 transition-all shadow-md"
               >
                 <span>Find Available Loads</span>
                 <Package className="w-4 h-4" />
@@ -143,7 +155,7 @@ export const HomePage: React.FC = () => {
           </div>
 
           {/* 2. REAL-TIME SEARCH WIDGET */}
-          <div className="mt-12 max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 p-6 sm:p-8">
+          <div className="mt-12 max-w-4xl mx-auto bg-white/95 dark:bg-slate-900/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 p-6 sm:p-8">
             <div className="flex border-b border-slate-200 dark:border-slate-700 mb-6">
               <button
                 type="button"

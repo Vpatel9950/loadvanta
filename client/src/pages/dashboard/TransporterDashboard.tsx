@@ -23,6 +23,7 @@ import {
   QuotationStatus,
   BookingStatus
 } from '@loadvanta/contracts';
+import { LiveTripMap } from '../../components/maps/LiveTripMap';
 
 export const TransporterDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -61,6 +62,12 @@ export const TransporterDashboard: React.FC = () => {
   const [quoteShipment, setQuoteShipment] = useState<any | null>(null);
   const [quotePrice, setQuotePrice] = useState('');
   const [quoteSubmitting, setQuoteSubmitting] = useState(false);
+
+  // POD Upload Modal State
+  const [podModalBooking, setPodModalBooking] = useState<any | null>(null);
+  const [podReceiverName, setPodReceiverName] = useState('');
+  const [podNotes, setPodNotes] = useState('');
+  const [podLoading, setPodLoading] = useState(false);
 
   const loadData = async () => {
     setLoading(true);
@@ -182,6 +189,31 @@ export const TransporterDashboard: React.FC = () => {
       alert(err.message || 'Failed to submit quote');
     } finally {
       setQuoteSubmitting(false);
+    }
+  };
+
+  const handleUploadPod = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!podModalBooking) return;
+    setPodLoading(true);
+
+    try {
+      const res = await api.post(`/bookings/${podModalBooking._id}/delivery-proof`, {
+        documentUrl: `https://loadvanta.com/pod-signed/${podModalBooking.bookingNumber}.pdf`,
+        receiverName: podReceiverName || 'Warehouse Consignee Manager',
+        notes: podNotes || 'Goods received in sound condition. Seal verified intact.'
+      });
+
+      if (res.data.success) {
+        setPodModalBooking(null);
+        setPodReceiverName('');
+        setPodNotes('');
+        loadData();
+      }
+    } catch (err: any) {
+      alert(err.message || 'Failed to upload POD');
+    } finally {
+      setPodLoading(false);
     }
   };
 
@@ -540,15 +572,28 @@ export const TransporterDashboard: React.FC = () => {
                         ₹{b.agreedPriceInr?.toLocaleString('en-IN')}
                       </span>
                       {b.status !== 'COMPLETED' && (
-                        <button
-                          onClick={() => {
-                            setMilestoneBooking(b);
-                            setMilestoneLocation(b.shipmentId?.pickupCity || '');
-                          }}
-                          className="px-3 py-1.5 rounded-xl bg-brand-navy hover:bg-slate-800 text-white text-xs font-semibold"
-                        >
-                          Update Status Milestone
-                        </button>
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={() => {
+                              setMilestoneBooking(b);
+                              setMilestoneLocation(b.shipmentId?.pickupCity || '');
+                            }}
+                            className="px-3 py-1.5 rounded-xl bg-brand-navy hover:bg-slate-800 text-white text-xs font-semibold"
+                          >
+                            Update Milestone
+                          </button>
+                          <button
+                            onClick={() => {
+                              setPodModalBooking(b);
+                              setPodReceiverName('');
+                              setPodNotes('');
+                            }}
+                            className="px-3 py-1.5 rounded-xl bg-green-600 hover:bg-green-700 text-white text-xs font-semibold flex items-center space-x-1"
+                          >
+                            <FileCheck className="w-3.5 h-3.5" />
+                            <span>Upload POD</span>
+                          </button>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -558,6 +603,14 @@ export const TransporterDashboard: React.FC = () => {
                     <div>Vehicle: <strong>{b.vehicleId?.registrationNumber}</strong></div>
                     <div>Latest Status: <strong className="text-green-600">{b.status}</strong></div>
                   </div>
+
+                  <LiveTripMap
+                    pickupCity={b.shipmentId?.pickupCity || 'Bathinda'}
+                    deliveryCity={b.shipmentId?.deliveryCity || 'Delhi'}
+                    currentMilestoneLocation={b.milestones?.[b.milestones.length - 1]?.location}
+                    truckRegistration={b.vehicleId?.registrationNumber}
+                    status={b.status}
+                  />
                 </div>
               ))}
             </div>
@@ -764,6 +817,69 @@ export const TransporterDashboard: React.FC = () => {
                 className="w-full py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white text-xs font-bold"
               >
                 {quoteSubmitting ? 'Submitting...' : 'Submit Quotation to Shipper'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Proof of Delivery (POD) Upload Modal */}
+      {podModalBooking && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-700">
+            <div className="flex justify-between items-center mb-3">
+              <div className="flex items-center space-x-2 text-green-600 font-bold text-sm">
+                <FileCheck className="w-5 h-5" />
+                <span>Upload Proof of Delivery (POD)</span>
+              </div>
+              <button onClick={() => setPodModalBooking(null)} className="text-slate-400 hover:text-slate-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <p className="text-xs text-slate-500 mb-4">
+              Booking Ref: <strong className="text-slate-800 dark:text-white">{podModalBooking.bookingNumber}</strong> ({podModalBooking.shipmentId?.title})
+            </p>
+
+            <form onSubmit={handleUploadPod} className="space-y-4 text-xs">
+              <div>
+                <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">
+                  Receiver / Consignee Name (Signee) *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={podReceiverName}
+                  onChange={(e) => setPodReceiverName(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm"
+                  placeholder="e.g. Ramesh Kumar (Delhi Central Warehouse)"
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">
+                  Delivery Challan & Bilty Notes
+                </label>
+                <textarea
+                  rows={2}
+                  value={podNotes}
+                  onChange={(e) => setPodNotes(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-xs"
+                  placeholder="e.g. 10 Tons received in good condition, seal 84920 verified intact."
+                />
+              </div>
+
+              <div className="p-3 bg-green-50 dark:bg-green-950/40 rounded-xl text-green-700 dark:text-green-300 text-[11px] leading-relaxed">
+                ✓ Uploading this signed POD will immediately notify the Shipper and mark the booking delivery as verified.
+              </div>
+
+              <button
+                type="submit"
+                disabled={podLoading}
+                className="w-full py-2.5 rounded-xl bg-green-600 hover:bg-green-700 text-white font-bold text-xs shadow-md transition-colors flex items-center justify-center space-x-2"
+              >
+                <FileCheck className="w-4 h-4" />
+                <span>{podLoading ? 'Submitting POD...' : 'Confirm Delivery & Submit POD'}</span>
               </button>
             </form>
           </div>

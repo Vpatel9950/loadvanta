@@ -197,19 +197,22 @@ export class BookingService {
     ) {
       booking.status = BookingStatus.IN_TRANSIT;
       await Shipment.findByIdAndUpdate(booking.shipmentId, { status: ShipmentStatus.IN_TRANSIT });
-    } else if (data.type === MilestoneType.DELIVERED) {
-      booking.status = BookingStatus.DELIVERED;
+    } else if (data.type === MilestoneType.COMPLETED || data.type === MilestoneType.DELIVERED) {
+      booking.status = data.type === MilestoneType.COMPLETED ? BookingStatus.COMPLETED : BookingStatus.DELIVERED;
       booking.actualDeliveryDate = new Date();
-      await Shipment.findByIdAndUpdate(booking.shipmentId, { status: ShipmentStatus.DELIVERED });
-    } else if (data.type === MilestoneType.COMPLETED) {
-      booking.status = BookingStatus.COMPLETED;
-      await Shipment.findByIdAndUpdate(booking.shipmentId, { status: ShipmentStatus.COMPLETED });
+      await Shipment.findByIdAndUpdate(booking.shipmentId, {
+        status: data.type === MilestoneType.COMPLETED ? ShipmentStatus.COMPLETED : ShipmentStatus.DELIVERED
+      });
 
-      // Release vehicle back into available fleet
+      // Fetch shipment to know the delivery city
+      const shipment = await Shipment.findById(booking.shipmentId);
+      const newCity = data.location || shipment?.deliveryCity || 'Delhi';
+
+      // Release vehicle back into available fleet and update location
       await Vehicle.findByIdAndUpdate(booking.vehicleId, {
         isAvailable: true,
         activeBookingId: null,
-        currentCity: data.location || undefined
+        currentCity: newCity
       });
     }
 
@@ -251,12 +254,21 @@ export class BookingService {
       notes: data.notes
     };
 
-    booking.milestones.push({
-      type: MilestoneType.POD_SUBMITTED,
-      title: 'Proof of Delivery (POD) Uploaded',
-      description: `Receiver: ${data.receiverName || 'Consignee'}`,
-      timestamp: new Date(),
-      updatedBy: new Types.ObjectId(transporterId)
+    booking.status = BookingStatus.DELIVERED;
+    booking.actualDeliveryDate = new Date();
+
+    const shipment = await Shipment.findByIdAndUpdate(
+      booking.shipmentId,
+      { status: ShipmentStatus.DELIVERED },
+      { new: true }
+    );
+
+    // Release vehicle back into available fleet at destination city
+    const deliveryCity = shipment?.deliveryCity || 'Delhi';
+    await Vehicle.findByIdAndUpdate(booking.vehicleId, {
+      isAvailable: true,
+      activeBookingId: null,
+      currentCity: deliveryCity
     });
 
     await booking.save();
