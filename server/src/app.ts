@@ -30,10 +30,21 @@ app.use(
   })
 );
 
-// Strict CORS configuration
+// Flexible CORS configuration supporting Vercel and local development
 app.use(
   cors({
-    origin: [config.clientUrl, 'http://localhost:5173', 'http://127.0.0.1:5173'],
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (
+        origin === config.clientUrl ||
+        origin.includes('localhost') ||
+        origin.includes('127.0.0.1') ||
+        origin.endsWith('.vercel.app')
+      ) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'x-razorpay-signature']
@@ -64,6 +75,16 @@ app.use('/api/', apiRateLimiter);
 
 // API Documentation
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Root Welcome Route
+app.get('/', (_req: Request, res: Response) => {
+  res.json({
+    status: 'success',
+    message: 'Loadvanta Logistics Marketplace API is running smoothly 🚀',
+    docs: '/api/docs',
+    health: '/health'
+  });
+});
 
 // Health Checks
 app.get('/health', (_req: Request, res: Response) => {
