@@ -24,6 +24,7 @@ import {
   BookingStatus
 } from '@loadvanta/contracts';
 import { LiveTripMap } from '../../components/maps/LiveTripMap';
+import { DriverGpsController } from '../../components/tracking/DriverGpsController';
 
 export const TransporterDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -605,12 +606,26 @@ export const TransporterDashboard: React.FC = () => {
                   </div>
 
                   <LiveTripMap
+                    bookingId={b._id}
                     pickupCity={b.shipmentId?.pickupCity || 'Bathinda'}
                     deliveryCity={b.shipmentId?.deliveryCity || 'Delhi'}
                     currentMilestoneLocation={b.milestones?.[b.milestones.length - 1]?.location}
                     truckRegistration={b.vehicleId?.registrationNumber}
                     status={b.status}
                   />
+
+                  {/* Real-Time Driver GPS Broadcasting Panel (Active during trip) */}
+                  {b.status !== 'COMPLETED' && (
+                    <div className="pt-2">
+                      <DriverGpsController
+                        bookingId={b._id}
+                        vehicleId={b.vehicleId?._id || b.vehicleId}
+                        truckRegistration={b.vehicleId?.registrationNumber}
+                        pickupCity={b.shipmentId?.pickupCity || 'Bathinda'}
+                        deliveryCity={b.shipmentId?.deliveryCity || 'Delhi'}
+                      />
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

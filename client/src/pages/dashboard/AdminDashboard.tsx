@@ -15,10 +15,11 @@ import {
   History
 } from 'lucide-react';
 import { VerificationStatus, UserRole } from '@loadvanta/contracts';
+import { AdminFleetRadar } from '../../components/tracking/AdminFleetRadar';
 
 export const AdminDashboard: React.FC = () => {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<'verifications' | 'vehicles' | 'users' | 'logs' | 'enquiries'>('verifications');
+  const [activeTab, setActiveTab] = useState<'verifications' | 'vehicles' | 'fleet_radar' | 'users' | 'logs' | 'enquiries'>('verifications');
 
   const [metrics, setMetrics] = useState<any>(null);
   const [transporters, setTransporters] = useState<any[]>([]);
@@ -154,6 +155,15 @@ export const AdminDashboard: React.FC = () => {
           }`}
         >
           Vehicle Approvals ({vehicles.length})
+        </button>
+        <button
+          onClick={() => setActiveTab('fleet_radar')}
+          className={`pb-3 px-5 text-sm font-bold border-b-2 whitespace-nowrap transition-all flex items-center space-x-2 ${
+            activeTab === 'fleet_radar' ? 'border-brand-orange text-brand-orange' : 'border-transparent text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <span className="w-2 h-2 rounded-full bg-green-500 animate-ping" />
+          <span>Live Fleet Radar</span>
         </button>
         <button
           onClick={() => setActiveTab('users')}
@@ -350,6 +360,9 @@ export const AdminDashboard: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Tab 3: Live Fleet GPS Radar */}
+      {activeTab === 'fleet_radar' && <AdminFleetRadar />}
 
       {/* Tab 5: Contact Enquiries */}
       {activeTab === 'enquiries' && (

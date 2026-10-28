@@ -497,6 +497,7 @@ export const ShipperDashboard: React.FC = () => {
 
                   {/* Google Maps Live Highway Tracking */}
                   <LiveTripMap
+                    bookingId={b._id}
                     pickupCity={b.shipmentId?.pickupCity || 'Bathinda'}
                     deliveryCity={b.shipmentId?.deliveryCity || 'Delhi'}
                     currentMilestoneLocation={b.milestones?.[b.milestones.length - 1]?.location}

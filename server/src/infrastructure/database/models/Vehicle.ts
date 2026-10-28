@@ -17,6 +17,14 @@ export interface IVehicle extends Document {
   isAvailable: boolean;
   availableFrom?: Date;
   activeBookingId?: Types.ObjectId;
+  lastKnownLocation?: {
+    latitude: number;
+    longitude: number;
+    heading?: number;
+    speed?: number;
+    accuracy?: number;
+    updatedAt: Date;
+  };
   verificationStatus: VerificationStatus;
   documents?: {
     rcNumber?: string;
@@ -46,6 +54,14 @@ const VehicleSchema = new Schema<IVehicle>(
     isAvailable: { type: Boolean, default: true, index: true },
     availableFrom: { type: Date, default: Date.now },
     activeBookingId: { type: Schema.Types.ObjectId, ref: 'Booking' },
+    lastKnownLocation: {
+      latitude: { type: Number },
+      longitude: { type: Number },
+      heading: { type: Number, default: 0 },
+      speed: { type: Number, default: 0 },
+      accuracy: { type: Number },
+      updatedAt: { type: Date }
+    },
     verificationStatus: {
       type: String,
       enum: Object.values(VerificationStatus),

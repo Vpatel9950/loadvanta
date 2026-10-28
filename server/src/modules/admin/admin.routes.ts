@@ -189,4 +189,21 @@ router.get('/enquiries', async (_req: Request, res: Response, next: NextFunction
   }
 });
 
+// Real-Time Fleet Radar (All in-transit bookings with live GPS)
+router.get('/fleet-radar', async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const activeTrips = await Booking.find({
+      status: { $in: ['CONFIRMED', 'IN_TRANSIT', 'OUT_FOR_DELIVERY'] }
+    })
+      .populate('vehicleId', 'registrationNumber vehicleType bodyType capacityTons currentCity lastKnownLocation')
+      .populate('shipperId', 'fullName companyName phone city')
+      .populate('transporterId', 'fullName companyName phone city')
+      .populate('shipmentId', 'title pickupCity deliveryCity cargoType weightTons');
+
+    res.json({ success: true, data: activeTrips });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export const adminRoutes = router;

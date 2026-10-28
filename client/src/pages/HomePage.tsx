@@ -15,6 +15,8 @@ import {
   Send
 } from 'lucide-react';
 import { VehicleType, CargoType } from '@loadvanta/contracts';
+import { HeroHighwayBackground } from '../components/landing/HeroHighwayBackground';
+import { LiveTruckHighwayAnimation } from '../components/landing/LiveTruckHighwayAnimation';
 
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -106,17 +108,8 @@ export const HomePage: React.FC = () => {
     <div className="space-y-16 lg:space-y-24">
       {/* 1. HERO SECTION WITH AESTHETIC VEHICLE BACKGROUND */}
       <section className="relative overflow-hidden pt-16 pb-24 min-h-[660px] flex items-center justify-center">
-        {/* Background Commercial Truck Image */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src="/images/hero-truck.jpg"
-            alt="Loadvanta Commercial Logistics Truck on Highway"
-            className="w-full h-full object-cover object-center filter saturate-125 contrast-110 brightness-100 dark:brightness-85 transition-all duration-300"
-          />
-          {/* Subtle translucent gradient: keeps truck colors punchy and clear without heavy washout */}
-          <div className="absolute inset-0 bg-gradient-to-b from-white/35 via-white/15 to-white/55 dark:from-slate-950/65 dark:via-slate-950/50 dark:to-slate-950/85 transition-colors duration-300" />
-          <div className="absolute inset-0 bg-radial-at-center from-white/40 via-transparent to-transparent dark:from-slate-950/40 pointer-events-none" />
-        </div>
+        {/* Realistic Highway & Moving Truck Background (No harsh blue sky!) */}
+        <HeroHighwayBackground />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="text-center max-w-3xl mx-auto space-y-6">
@@ -251,6 +244,24 @@ export const HomePage: React.FC = () => {
             </form>
           </div>
         </div>
+      </section>
+
+      {/* 2.5 REALISTIC HIGHWAY IN MOTION: LIVE FREIGHT CORRIDOR ANIMATION */}
+      <section className="relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-2">
+          <div className="inline-flex items-center space-x-2 text-xs uppercase tracking-wider font-bold text-brand-orange">
+            <Truck className="w-4 h-4" />
+            <span>Loadvanta Fleet in Motion</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">
+            Real Freight. Moving Across Punjab Highways.
+          </h2>
+          <p className="text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto mt-1">
+            Experience our real-time GPS telemetry, optimized return corridors, and zero-deadhead fleet network live in action.
+          </p>
+        </div>
+
+        <LiveTruckHighwayAnimation />
       </section>
 
       {/* 3. LIVE DATABASE METRICS */}

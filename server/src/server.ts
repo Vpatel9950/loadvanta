@@ -1,14 +1,22 @@
+import http from 'http';
 import { app } from './app';
 import { config } from './config/env';
 import { connectDatabase } from './config/database';
+import { TrackingSocketService } from './infrastructure/websocket/trackingSocket';
 
 async function startServer() {
   try {
     await connectDatabase();
 
-    const server = app.listen(config.port, () => {
+    const httpServer = http.createServer(app);
+    
+    // Initialize Real-time WebSocket Gateway for GPS live tracking
+    TrackingSocketService.initialize(httpServer);
+
+    const server = httpServer.listen(config.port, () => {
       console.log(`[Loadvanta Server] Running on http://localhost:${config.port}`);
       console.log(`[Loadvanta Server] API Documentation: http://localhost:${config.port}/api/docs`);
+      console.log(`[Loadvanta Server] WebSocket GPS Streamer active on ws://localhost:${config.port}`);
     });
 
     const shutdown = async () => {

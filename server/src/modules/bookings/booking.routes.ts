@@ -29,4 +29,9 @@ router.post('/:id/delivery-proof', authenticate, authorizeRoles(UserRole.TRANSPO
   bookingController.uploadDeliveryProof(req, res, next);
 });
 
+// Real-time GPS Tracking status & last known location
+router.get('/:id/live-tracking', authenticate, (req, res, next) => {
+  bookingController.getLiveTracking(req, res, next);
+});
+
 export const bookingRoutes = router;

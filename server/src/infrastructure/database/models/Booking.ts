@@ -31,6 +31,25 @@ export interface IBooking extends Document {
   scheduledPickupDate: Date;
   scheduledDeliveryDate: Date;
   actualDeliveryDate?: Date;
+  liveTracking?: {
+    lastKnownLocation?: {
+      latitude: number;
+      longitude: number;
+      heading?: number;
+      speed?: number;
+      accuracy?: number;
+      timestamp: Date;
+    };
+    isActive: boolean;
+    startedAt?: Date;
+    history?: Array<{
+      latitude: number;
+      longitude: number;
+      timestamp: Date;
+      speed?: number;
+      heading?: number;
+    }>;
+  };
   cancellationReason?: string;
   cancelledBy?: Types.ObjectId;
   createdAt: Date;
@@ -78,6 +97,27 @@ const BookingSchema = new Schema<IBooking>(
     scheduledPickupDate: { type: Date, required: true },
     scheduledDeliveryDate: { type: Date, required: true },
     actualDeliveryDate: { type: Date },
+    liveTracking: {
+      lastKnownLocation: {
+        latitude: { type: Number },
+        longitude: { type: Number },
+        heading: { type: Number, default: 0 },
+        speed: { type: Number, default: 0 },
+        accuracy: { type: Number },
+        timestamp: { type: Date }
+      },
+      isActive: { type: Boolean, default: false },
+      startedAt: { type: Date },
+      history: [
+        {
+          latitude: { type: Number, required: true },
+          longitude: { type: Number, required: true },
+          timestamp: { type: Date, default: Date.now },
+          speed: { type: Number, default: 0 },
+          heading: { type: Number, default: 0 }
+        }
+      ]
+    },
     cancellationReason: { type: String },
     cancelledBy: { type: Schema.Types.ObjectId, ref: 'User' }
   },

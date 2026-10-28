@@ -317,6 +317,12 @@ export class BookingService {
 
     return booking;
   }
+
+  async getLiveTracking(bookingId: string) {
+    const booking = await Booking.findById(bookingId).select('liveTracking bookingNumber status vehicleId shipmentId');
+    if (!booking) return null;
+    return booking.liveTracking || { isActive: false };
+  }
 }
 
 export const bookingService = new BookingService();

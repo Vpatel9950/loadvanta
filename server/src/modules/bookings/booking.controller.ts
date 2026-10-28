@@ -70,6 +70,19 @@ export class BookingController {
       next(error);
     }
   }
+
+  async getLiveTracking(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const tracking = await bookingService.getLiveTracking(req.params.id);
+      if (!tracking) {
+        res.status(404).json({ success: false, error: { message: 'Booking not found' } });
+        return;
+      }
+      res.json({ success: true, data: tracking });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export const bookingController = new BookingController();

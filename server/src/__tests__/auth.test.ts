@@ -6,11 +6,11 @@ import { connectDatabase, disconnectDatabase } from '../config/database';
 describe('Authentication API & Protected Routes', () => {
   beforeAll(async () => {
     await connectDatabase();
-  });
+  }, 30000);
 
   afterAll(async () => {
     await disconnectDatabase();
-  });
+  }, 30000);
 
   it('should login with valid seed credentials', async () => {
     const res = await request(app)

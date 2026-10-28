@@ -26,11 +26,11 @@ describe('Loadvanta Complete Marketplace Lifecycle E2E', () => {
       .post('/api/v1/auth/login')
       .send({ email: 'transporter@loadvanta.com', password: 'Password@123' });
     transporterToken = tLogin.body.data.accessToken;
-  });
+  }, 30000);
 
   afterAll(async () => {
     await disconnectDatabase();
-  });
+  }, 30000);
 
   it('1. Transporter adds a commercial vehicle to fleet', async () => {
     const regNum = `PB10TEST${Math.floor(1000 + Math.random() * 9000)}`;
