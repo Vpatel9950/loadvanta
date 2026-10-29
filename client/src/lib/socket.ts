@@ -4,9 +4,17 @@ let socket: Socket | null = null;
 
 export const getSocket = (): Socket => {
   if (!socket) {
-    const serverUrl = import.meta.env.VITE_API_URL
-      ? new URL(import.meta.env.VITE_API_URL).origin
-      : 'http://localhost:5000';
+    const rawUrl =
+      import.meta.env.VITE_API_URL ||
+      import.meta.env.VITE_API_BASE_URL ||
+      'http://localhost:5000';
+
+    let serverUrl: string;
+    try {
+      serverUrl = new URL(rawUrl).origin;
+    } catch {
+      serverUrl = rawUrl.replace(/\/api\/v1\/?$/, '');
+    }
 
     socket = io(serverUrl, {
       transports: ['websocket', 'polling'],
@@ -17,8 +25,8 @@ export const getSocket = (): Socket => {
         cb({ token });
       },
       reconnection: true,
-      reconnectionAttempts: 15,
-      reconnectionDelay: 1000
+      reconnectionAttempts: 25,
+      reconnectionDelay: 1500
     });
 
     socket.on('connect', () => {

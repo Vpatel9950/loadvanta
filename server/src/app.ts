@@ -20,6 +20,7 @@ import { paymentRoutes } from './modules/payments/payment.routes';
 import { contactRoutes } from './modules/contact/contact.routes';
 import { notificationRoutes } from './modules/notifications/notification.routes';
 import { adminRoutes } from './modules/admin/admin.routes';
+import { aiRoutes } from './modules/ai/ai.routes';
 
 export const app = express();
 
@@ -116,6 +117,7 @@ v1.use('/payments', paymentRoutes);
 v1.use('/contact', contactRoutes);
 v1.use('/notifications', notificationRoutes);
 v1.use('/admin', adminRoutes);
+v1.use('/ai', aiRoutes);
 
 app.use('/api/v1', v1);
 

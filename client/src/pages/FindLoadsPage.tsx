@@ -10,9 +10,12 @@ import {
   CheckCircle2,
   AlertCircle,
   Truck,
-  X
+  X,
+  Mic,
+  Sparkles
 } from 'lucide-react';
 import { CargoType, UserRole } from '@loadvanta/contracts';
+import { VoiceLoadSearchModal } from '../components/voice/VoiceLoadSearchModal';
 
 export const FindLoadsPage: React.FC = () => {
   const { user } = useAuth();
@@ -22,6 +25,14 @@ export const FindLoadsPage: React.FC = () => {
   const [pickupFilter, setPickupFilter] = useState(searchParams.get('pickupCity') || '');
   const [deliveryFilter, setDeliveryFilter] = useState(searchParams.get('deliveryCity') || '');
   const [cargoFilter, setCargoFilter] = useState('');
+  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
+
+  useEffect(() => {
+    const qPickup = searchParams.get('pickupCity');
+    const qDelivery = searchParams.get('deliveryCity');
+    if (qPickup !== null) setPickupFilter(qPickup);
+    if (qDelivery !== null) setDeliveryFilter(qDelivery);
+  }, [searchParams]);
 
   // Quotation Submission Modal
   const [selectedLoad, setSelectedLoad] = useState<any | null>(null);
@@ -128,13 +139,32 @@ export const FindLoadsPage: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      <div>
-        <h1 className="text-3xl font-extrabold text-brand-navy dark:text-white tracking-tight">
-          Available Loads & Freight in Punjab
-        </h1>
-        <p className="text-sm text-slate-500 mt-1">
-          Explore published shipments ready for quotation and direct dispatch.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-extrabold text-brand-navy dark:text-white tracking-tight">
+            Available Loads & Freight in Punjab
+          </h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Explore published shipments ready for quotation and direct dispatch.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setIsVoiceModalOpen(true)}
+          className="inline-flex items-center space-x-3 px-5 py-3 rounded-2xl bg-gradient-to-r from-brand-orange to-amber-500 hover:from-brand-orangeHover hover:to-amber-600 text-white font-bold text-sm shadow-lg shadow-brand-orange/25 hover:shadow-xl hover:scale-[1.02] transition-all self-start sm:self-auto cursor-pointer"
+        >
+          <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center animate-pulse">
+            <Mic className="w-4 h-4 text-white" />
+          </div>
+          <div className="text-left">
+            <div className="text-[10px] uppercase tracking-wider text-amber-100 font-bold flex items-center space-x-1">
+              <Sparkles className="w-3 h-3 text-amber-200" />
+              <span>Gemini AI Voice</span>
+            </div>
+            <div className="text-sm font-black">ਬੋਲ ਕੇ ਲੱਭੋ • Voice Search</div>
+          </div>
+        </button>
       </div>
 
       {/* Filter Bar */}
@@ -414,6 +444,17 @@ export const FindLoadsPage: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Gemini AI Punjabi/Hindi Voice Search Modal */}
+      <VoiceLoadSearchModal
+        isOpen={isVoiceModalOpen}
+        onClose={() => setIsVoiceModalOpen(false)}
+        onApplyFilters={(filters) => {
+          if (filters.pickupCity) setPickupFilter(filters.pickupCity);
+          if (filters.deliveryCity) setDeliveryFilter(filters.deliveryCity);
+          if (filters.cargoType) setCargoFilter(filters.cargoType);
+        }}
+      />
     </div>
   );
 };

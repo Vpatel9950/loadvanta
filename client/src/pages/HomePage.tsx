@@ -12,10 +12,12 @@ import {
   RefreshCw,
   Clock,
   MapPin,
-  Send
+  Send,
+  Mic
 } from 'lucide-react';
 import { VehicleType, CargoType } from '@loadvanta/contracts';
 import { HeroHighwayBackground } from '../components/landing/HeroHighwayBackground';
+import { VoiceLoadSearchModal } from '../components/voice/VoiceLoadSearchModal';
 import { LiveTruckHighwayAnimation } from '../components/landing/LiveTruckHighwayAnimation';
 
 export const HomePage: React.FC = () => {
@@ -24,6 +26,7 @@ export const HomePage: React.FC = () => {
   const [originCity, setOriginCity] = useState('');
   const [destCity, setDestCity] = useState('');
   const [selectedVehicleType, setSelectedVehicleType] = useState('');
+  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
 
   // Live platform statistics from database
   const [metrics, setMetrics] = useState({
@@ -173,6 +176,15 @@ export const HomePage: React.FC = () => {
               >
                 <Package className="w-4 h-4" />
                 <span>Search Freight Loads</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setIsVoiceModalOpen(true)}
+                className="ml-auto mb-2 flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-brand-orange/20 to-amber-500/20 border border-brand-orange/40 text-brand-orange text-xs font-black hover:scale-105 transition-all shadow-sm"
+              >
+                <Mic className="w-3.5 h-3.5 animate-pulse text-brand-orange" />
+                <span>ਬੋਲ ਕੇ ਲੱਭੋ • Voice Search</span>
               </button>
             </div>
 
@@ -587,6 +599,12 @@ export const HomePage: React.FC = () => {
           )}
         </div>
       </section>
+
+      {/* Voice Load Search Modal (Gemini AI Punjabi/Hindi Audio Search) */}
+      <VoiceLoadSearchModal
+        isOpen={isVoiceModalOpen}
+        onClose={() => setIsVoiceModalOpen(false)}
+      />
     </div>
   );
 };

@@ -39,7 +39,9 @@ export class TrackingSocketService {
   public static initialize(httpServer: HttpServer): SocketIOServer {
     const io = new SocketIOServer(httpServer, {
       cors: {
-        origin: '*', // Allow development localhost & authorized clients
+        origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+          callback(null, true);
+        },
         methods: ['GET', 'POST'],
         credentials: true
       },

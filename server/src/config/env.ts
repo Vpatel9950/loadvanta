@@ -27,5 +27,8 @@ export const config = {
     driver: process.env.STORAGE_DRIVER || 'local',
     uploadDir: path.resolve(process.cwd(), process.env.UPLOAD_DIR || 'uploads'),
     maxFileSizeMb: parseInt(process.env.MAX_FILE_SIZE_MB || '10', 10)
+  },
+  gemini: {
+    apiKey: process.env.GEMINI_API_KEY || ''
   }
 };
