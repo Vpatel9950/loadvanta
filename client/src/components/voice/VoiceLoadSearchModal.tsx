@@ -451,22 +451,22 @@ Return ONLY a JSON object with this exact structure:
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-lg bg-slate-900 border border-slate-700/80 rounded-3xl p-6 sm:p-8 shadow-2xl text-white space-y-5 max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/55 backdrop-blur-[2px] transition-all duration-200">
+      <div className="relative w-full max-w-lg bg-slate-900/95 border border-slate-700/80 rounded-2xl sm:rounded-3xl shadow-2xl text-white flex flex-col max-h-[92dvh] sm:max-h-[85vh] overflow-hidden">
+        {/* Sticky Header - Always Visible & Never Scrolls Away */}
+        <div className="flex-shrink-0 px-5 sm:px-7 pt-5 sm:pt-6 pb-4 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md flex items-center justify-between z-20">
           <div className="flex items-center space-x-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-brand-orange/20 border border-brand-orange/40 flex items-center justify-center text-brand-orange">
-              <Sparkles className="w-5 h-5 animate-pulse" />
+            <div className="w-9 sm:w-10 h-9 sm:h-10 rounded-2xl bg-brand-orange/20 border border-brand-orange/40 flex items-center justify-center text-brand-orange">
+              <Sparkles className="w-4 sm:w-5 h-4 sm:h-5 animate-pulse" />
             </div>
             <div>
-              <h3 className="text-lg font-black tracking-tight flex items-center space-x-2">
+              <h3 className="text-base sm:text-lg font-black tracking-tight flex items-center space-x-2">
                 <span>AI Voice Load Search</span>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-green-500/20 text-green-300 border border-green-500/30">
                   GEMINI 3.5 AI
                 </span>
               </h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-[11px] sm:text-xs text-slate-400">
                 English • हिन्दी • ਪੰਜਾਬੀ Voice Freight Assistant
               </p>
             </div>
@@ -476,213 +476,217 @@ Return ONLY a JSON object with this exact structure:
             type="button"
             onClick={onClose}
             className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+            aria-label="Close modal"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Language Selector */}
-        <div className="flex items-center justify-between bg-slate-950/70 p-2 rounded-2xl border border-slate-800 text-xs">
-          <span className="text-slate-400 font-medium px-2 flex items-center space-x-1.5">
-            <Globe className="w-3.5 h-3.5" />
-            <span>Language:</span>
-          </span>
-          <div className="flex space-x-1">
-            {[
-              { code: 'en-IN', label: 'English / Hinglish' },
-              { code: 'hi-IN', label: 'हिन्दी (Hindi)' },
-              { code: 'pa-IN', label: 'ਪੰਜਾਬੀ (Punjabi)' }
-            ].map((l) => (
-              <button
-                key={l.code}
-                type="button"
-                onClick={() => setSelectedLanguage(l.code as any)}
-                className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer ${
-                  selectedLanguage === l.code
-                    ? 'bg-brand-orange text-white shadow-sm'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
-                }`}
-              >
-                {l.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Central Animated Microphone Button */}
-        <div className="flex flex-col items-center justify-center py-3 space-y-3">
-          <div className="relative">
-            {/* Pulsing Ripple Rings when listening */}
-            {isListening && (
-              <>
-                <span className="absolute inset-0 rounded-full bg-brand-orange/30 animate-ping" />
-                <span className="absolute -inset-4 rounded-full bg-brand-orange/20 animate-pulse" />
-              </>
-            )}
-
-            <button
-              type="button"
-              onClick={toggleListening}
-              className={`relative z-10 w-24 h-24 rounded-full flex items-center justify-center shadow-2xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer ${
-                isListening
-                  ? 'bg-red-600 text-white shadow-red-500/50'
-                  : 'bg-gradient-to-tr from-brand-orange to-amber-500 text-white shadow-orange-500/40'
-              }`}
-            >
-              {isListening ? (
-                <div className="flex flex-col items-center">
-                  <Mic className="w-9 h-9 animate-bounce" />
-                  <span className="text-[10px] font-black uppercase mt-0.5">Listening...</span>
-                </div>
-              ) : (
-                <div className="flex flex-col items-center">
-                  <Mic className="w-9 h-9" />
-                  <span className="text-[10px] font-black uppercase mt-0.5">TAP & SPEAK</span>
-                </div>
-              )}
-            </button>
-          </div>
-
-          <p className="text-xs text-center text-slate-300 max-w-xs font-medium">
-            {isListening
-              ? 'Speak naturally... Gemini AI will automatically search when you finish!'
-              : selectedLanguage === 'en-IN'
-              ? 'Tap mic and speak (e.g. "Ludhiana to Delhi 16 ton garments")'
-              : selectedLanguage === 'hi-IN'
-              ? 'Mic dabayein aur boliye (e.g. "Bathinda se Khanna 20 ton gehu load")'
-              : 'ਮਾਈਕ ਦਬਾਓ ਤੇ ਬੋਲੋ (ਜਿਵੇਂ: "ਲੁਧਿਆਣੇ ਤੋਂ ਦਿੱਲੀ 16 ਟਨ ਕੱਪੜਾ")'}
-          </p>
-
-          {/* Soundwave Bars Indicator when listening */}
-          {isListening && (
-            <div className="flex items-center space-x-1.5 h-5">
-              {[4, 10, 16, 22, 14, 8, 18, 12, 6].map((h, i) => (
-                <div
-                  key={i}
-                  className="w-1 bg-brand-orange rounded-full animate-pulse"
-                  style={{ height: `${h}px`, animationDelay: `${i * 100}ms` }}
-                />
+        {/* Scrollable Body - All Interactive Voice Content & Action Buttons */}
+        <div className="flex-1 overflow-y-auto px-5 sm:px-7 py-4 sm:py-5 space-y-4 overscroll-contain pb-8">
+          {/* Language Selector */}
+          <div className="flex items-center justify-between bg-slate-950/70 p-1.5 sm:p-2 rounded-2xl border border-slate-800 text-xs">
+            <span className="text-slate-400 font-medium px-1.5 sm:px-2 flex items-center space-x-1.5 text-[11px] sm:text-xs">
+              <Globe className="w-3.5 h-3.5" />
+              <span>Language:</span>
+            </span>
+            <div className="flex space-x-1">
+              {[
+                { code: 'en-IN', label: 'English' },
+                { code: 'hi-IN', label: 'हिन्दी' },
+                { code: 'pa-IN', label: 'ਪੰਜਾਬੀ' }
+              ].map((l) => (
+                <button
+                  key={l.code}
+                  type="button"
+                  onClick={() => setSelectedLanguage(l.code as any)}
+                  className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl font-bold text-[11px] sm:text-xs transition-all cursor-pointer ${
+                    selectedLanguage === l.code
+                      ? 'bg-brand-orange text-white shadow-sm'
+                      : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                  }`}
+                >
+                  {l.label}
+                </button>
               ))}
             </div>
-          )}
-        </div>
+          </div>
 
-        {/* Live Speech Transcript Box with 1-Click Search */}
-        {(transcript || isListening) && (
-          <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 text-sm space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
-                Heard Voice Speech:
-              </span>
-              {!isListening && transcript && (
-                <button
-                  type="button"
-                  onClick={() => processWithAI(transcript)}
-                  disabled={isProcessing}
-                  className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-brand-orange hover:bg-brand-orangeHover text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
-                >
-                  <Search className="w-3 h-3" />
-                  <span>Search with AI</span>
-                </button>
+          {/* Central Animated Microphone Button */}
+          <div className="flex flex-col items-center justify-center py-2 sm:py-3 space-y-3">
+            <div className="relative">
+              {/* Pulsing Ripple Rings when listening */}
+              {isListening && (
+                <>
+                  <span className="absolute inset-0 rounded-full bg-brand-orange/30 animate-ping" />
+                  <span className="absolute -inset-4 rounded-full bg-brand-orange/20 animate-pulse" />
+                </>
               )}
-            </div>
-            <div className="text-slate-100 font-medium italic text-base">
-              "{transcript || 'Waiting for speech...'}"
-            </div>
-          </div>
-        )}
 
-        {/* Processing Spinner */}
-        {isProcessing && (
-          <div className="p-4 rounded-2xl bg-brand-orange/10 border border-brand-orange/30 text-brand-orange text-xs flex items-center justify-center space-x-2 animate-pulse">
-            <Sparkles className="w-4 h-4 animate-spin" />
-            <span className="font-bold">Gemini AI is parsing query parameters...</span>
-          </div>
-        )}
-
-        {/* Error Alert */}
-        {error && (
-          <div className="p-3 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-300 text-xs">
-            {error}
-          </div>
-        )}
-
-        {/* Parsed Extracted AI Results */}
-        {parsedData && (
-          <div className="p-4 rounded-2xl bg-slate-950 border border-green-500/40 space-y-3 animate-fadeIn">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-green-400 flex items-center space-x-1.5">
-                <CheckCircle2 className="w-4 h-4" />
-                <span>AI Extracted Parameters:</span>
-              </span>
-              <span className="text-[10px] font-mono text-slate-500">Ready to Match</span>
+              <button
+                type="button"
+                onClick={toggleListening}
+                className={`relative z-10 w-22 h-22 sm:w-24 sm:h-24 rounded-full flex items-center justify-center shadow-2xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer ${
+                  isListening
+                    ? 'bg-red-600 text-white shadow-red-500/50'
+                    : 'bg-gradient-to-tr from-brand-orange to-amber-500 text-white shadow-orange-500/40'
+                }`}
+              >
+                {isListening ? (
+                  <div className="flex flex-col items-center">
+                    <Mic className="w-8 sm:w-9 h-8 sm:h-9 animate-bounce" />
+                    <span className="text-[10px] font-black uppercase mt-0.5">Listening...</span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <Mic className="w-8 sm:w-9 h-8 sm:h-9" />
+                    <span className="text-[10px] font-black uppercase mt-0.5">TAP & SPEAK</span>
+                  </div>
+                )}
+              </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                <span className="text-slate-500 text-[10px] block">Pickup City</span>
-                <strong className="text-white font-mono text-sm">
-                  {parsedData.pickupCity || 'Any (All Punjab)'}
-                </strong>
-              </div>
-              <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                <span className="text-slate-500 text-[10px] block">Delivery Destination</span>
-                <strong className="text-white font-mono text-sm">
-                  {parsedData.deliveryCity || 'Any Destination'}
-                </strong>
-              </div>
-              <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                <span className="text-slate-500 text-[10px] block">Weight</span>
-                <strong className="text-brand-orange font-mono text-sm">
-                  {parsedData.weightTons ? `${parsedData.weightTons} Tons` : 'Any'}
-                </strong>
-              </div>
-              <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                <span className="text-slate-500 text-[10px] block">Cargo Category</span>
-                <strong className="text-green-300 font-mono text-sm">
-                  {parsedData.cargoType || 'General Freight'}
-                </strong>
-              </div>
-            </div>
+            <p className="text-xs text-center text-slate-300 max-w-xs font-medium">
+              {isListening
+                ? 'Speak naturally... Gemini AI will automatically search when you finish!'
+                : selectedLanguage === 'en-IN'
+                ? 'Tap mic and speak (e.g. "Ludhiana to Delhi 16 ton garments")'
+                : selectedLanguage === 'hi-IN'
+                ? 'Mic dabayein aur boliye (e.g. "Bathinda se Khanna 20 ton gehu load")'
+                : 'ਮਾਈਕ ਦਬਾਓ ਤੇ ਬੋਲੋ (ਜਿਵੇਂ: "ਲੁਧਿਆਣੇ ਤੋਂ ਦਿੱਲੀ 16 ਟਨ ਕੱਪੜਾ")'}
+            </p>
 
-            {getActiveSummary() && (
-              <div className="text-[11px] text-slate-300 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
-                <b>AI Summary:</b> {getActiveSummary()}
+            {/* Soundwave Bars Indicator when listening */}
+            {isListening && (
+              <div className="flex items-center space-x-1.5 h-5">
+                {[4, 10, 16, 22, 14, 8, 18, 12, 6].map((h, i) => (
+                  <div
+                    key={i}
+                    className="w-1 bg-brand-orange rounded-full animate-pulse"
+                    style={{ height: `${h}px`, animationDelay: `${i * 100}ms` }}
+                  />
+                ))}
               </div>
             )}
-
-            <button
-              type="button"
-              onClick={handleApply}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-brand-orange to-amber-500 hover:from-brand-orangeHover hover:to-amber-600 text-white font-bold text-sm shadow-xl shadow-orange-500/20 flex items-center justify-center space-x-2 transition-all transform hover:-translate-y-0.5 cursor-pointer"
-            >
-              <span>View Matched Freight Loads</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
           </div>
-        )}
 
-        {/* Quick Sample Voice Prompts (1-Click Try) */}
-        <div className="space-y-2 pt-2 border-t border-slate-800/80">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
-            Or Click a Sample Driver Query to Test:
-          </span>
-          <div className="flex flex-wrap gap-2">
-            {sampleQueries.map((q, idx) => (
+          {/* Live Speech Transcript Box with 1-Click Search */}
+          {(transcript || isListening) && (
+            <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-950 border border-slate-800 text-sm space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                  Heard Voice Speech:
+                </span>
+                {!isListening && transcript && (
+                  <button
+                    type="button"
+                    onClick={() => processWithAI(transcript)}
+                    disabled={isProcessing}
+                    className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-brand-orange hover:bg-brand-orangeHover text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
+                  >
+                    <Search className="w-3 h-3" />
+                    <span>Search with AI</span>
+                  </button>
+                )}
+              </div>
+              <div className="text-slate-100 font-medium italic text-sm sm:text-base break-words">
+                "{transcript || 'Waiting for speech...'}"
+              </div>
+            </div>
+          )}
+
+          {/* Processing Spinner */}
+          {isProcessing && (
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-brand-orange/10 border border-brand-orange/30 text-brand-orange text-xs flex items-center justify-center space-x-2 animate-pulse">
+              <Sparkles className="w-4 h-4 animate-spin" />
+              <span className="font-bold">Gemini AI is parsing query parameters...</span>
+            </div>
+          )}
+
+          {/* Error Alert */}
+          {error && (
+            <div className="p-3 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-300 text-xs">
+              {error}
+            </div>
+          )}
+
+          {/* Parsed Extracted AI Results */}
+          {parsedData && (
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-950 border border-green-500/40 space-y-3 animate-fadeIn">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-green-400 flex items-center space-x-1.5">
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>AI Extracted Parameters:</span>
+                </span>
+                <span className="text-[10px] font-mono text-slate-500">Ready to Match</span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div className="p-2 sm:p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+                  <span className="text-slate-500 text-[10px] block">Pickup City</span>
+                  <strong className="text-white font-mono text-xs sm:text-sm truncate block">
+                    {parsedData.pickupCity || 'Any (All Punjab)'}
+                  </strong>
+                </div>
+                <div className="p-2 sm:p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+                  <span className="text-slate-500 text-[10px] block">Delivery Destination</span>
+                  <strong className="text-white font-mono text-xs sm:text-sm truncate block">
+                    {parsedData.deliveryCity || 'Any Destination'}
+                  </strong>
+                </div>
+                <div className="p-2 sm:p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+                  <span className="text-slate-500 text-[10px] block">Weight</span>
+                  <strong className="text-brand-orange font-mono text-xs sm:text-sm">
+                    {parsedData.weightTons ? `${parsedData.weightTons} Tons` : 'Any'}
+                  </strong>
+                </div>
+                <div className="p-2 sm:p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+                  <span className="text-slate-500 text-[10px] block">Cargo Category</span>
+                  <strong className="text-green-300 font-mono text-xs sm:text-sm truncate block">
+                    {parsedData.cargoType || 'General Freight'}
+                  </strong>
+                </div>
+              </div>
+
+              {getActiveSummary() && (
+                <div className="text-[11px] text-slate-300 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
+                  <b>AI Summary:</b> {getActiveSummary()}
+                </div>
+              )}
+
               <button
-                key={idx}
                 type="button"
-                onClick={() => {
-                  setTranscript(q.text);
-                  transcriptRef.current = q.text;
-                  processWithAI(q.text);
-                }}
-                className="px-2.5 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 text-slate-300 hover:text-white text-[11px] transition-colors flex items-center space-x-1 cursor-pointer"
+                onClick={handleApply}
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-brand-orange to-amber-500 hover:from-brand-orangeHover hover:to-amber-600 text-white font-bold text-xs sm:text-sm shadow-xl shadow-orange-500/20 flex items-center justify-center space-x-2 transition-all transform hover:-translate-y-0.5 cursor-pointer"
               >
-                <span>🗣️</span>
-                <span>{q.label}</span>
+                <span>View Matched Freight Loads</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
-            ))}
+            </div>
+          )}
+
+          {/* Quick Sample Voice Prompts (1-Click Try) */}
+          <div className="space-y-2 pt-2 border-t border-slate-800/80">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
+              Or Click a Sample Driver Query to Test:
+            </span>
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
+              {sampleQueries.map((q, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => {
+                    setTranscript(q.text);
+                    transcriptRef.current = q.text;
+                    processWithAI(q.text);
+                  }}
+                  className="px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 text-slate-300 hover:text-white text-[10px] sm:text-[11px] transition-colors flex items-center space-x-1 cursor-pointer"
+                >
+                  <span>🗣️</span>
+                  <span>{q.label}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

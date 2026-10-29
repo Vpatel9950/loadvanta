@@ -222,27 +222,27 @@ export const LiveTruckHighwayAnimation: React.FC = () => {
           {/* ======================================================== */}
           {/* ULTRA-DETAILED COMMERCIAL FREIGHT TRUCK (SVG VECTOR)     */}
           {/* ======================================================== */}
-          <div className="absolute bottom-[28px] sm:bottom-[34px] left-[10%] sm:left-[16%] z-20">
+          <div className="absolute bottom-[24px] sm:bottom-[34px] left-2 sm:left-[14%] z-20">
             {/* Visual Horn Shockwave */}
             {honking && (
-              <div className="absolute -top-12 left-[280px] sm:left-[340px] px-3 py-1 rounded-full bg-amber-400 text-slate-950 font-black text-xs animate-bounce shadow-xl flex items-center space-x-1">
+              <div className="absolute -top-12 left-[210px] sm:left-[340px] px-3 py-1 rounded-full bg-amber-400 text-slate-950 font-black text-xs animate-bounce shadow-xl flex items-center space-x-1">
                 <span>🔊 BEEP BEEP!</span>
               </div>
             )}
 
             {/* Realistic Vehicle Shadow */}
-            <div className="absolute -bottom-2.5 left-4 w-[340px] sm:w-[410px] h-5 bg-black/80 rounded-full blur-[4px]" />
+            <div className="absolute -bottom-2.5 left-2 sm:left-4 w-[270px] sm:w-[410px] h-4 sm:h-5 bg-black/80 rounded-full blur-[4px]" />
 
             {/* Truck Body with Suspension Vibration */}
             <div className="relative animate-[truckSway_1.6s_ease-in-out_infinite]">
               {/* NIGHT-TIME HEADLIGHT LIGHT BEAM CONE */}
               {isNight && (
-                <div className="absolute top-[48px] sm:top-[56px] left-[320px] sm:left-[390px] w-[350px] sm:w-[480px] h-[75px] sm:h-[90px] bg-gradient-to-r from-amber-100/70 via-amber-200/20 to-transparent pointer-events-none transform -rotate-1 origin-left [clip-path:polygon(0%_25%,100%_0%,100%_100%,0%_75%)] blur-[2px]" />
+                <div className="absolute top-[38px] sm:top-[56px] left-[240px] sm:left-[390px] w-[240px] sm:w-[480px] h-[55px] sm:h-[90px] bg-gradient-to-r from-amber-100/70 via-amber-200/20 to-transparent pointer-events-none transform -rotate-1 origin-left [clip-path:polygon(0%_25%,100%_0%,100%_100%,0%_75%)] blur-[2px]" />
               )}
 
               {/* The Truck SVG */}
               <svg
-                className="w-[360px] sm:w-[430px] h-[140px] sm:h-[165px] drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)]"
+                className="w-[280px] sm:w-[430px] h-auto drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)]"
                 viewBox="0 0 520 200"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"

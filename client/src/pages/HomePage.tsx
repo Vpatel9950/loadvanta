@@ -152,38 +152,43 @@ export const HomePage: React.FC = () => {
 
           {/* 2. REAL-TIME SEARCH WIDGET */}
           <div className="mt-12 max-w-4xl mx-auto bg-white/95 dark:bg-slate-900/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 p-6 sm:p-8">
-            <div className="flex border-b border-slate-200 dark:border-slate-700 mb-6">
-              <button
-                type="button"
-                onClick={() => setSearchTab('trucks')}
-                className={`flex items-center space-x-2 pb-3 px-4 font-semibold text-sm border-b-2 transition-all ${
-                  searchTab === 'trucks'
-                    ? 'border-brand-orange text-brand-orange'
-                    : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
-                }`}
-              >
-                <Truck className="w-4 h-4" />
-                <span>Search Available Trucks</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setSearchTab('loads')}
-                className={`flex items-center space-x-2 pb-3 px-4 font-semibold text-sm border-b-2 transition-all ${
-                  searchTab === 'loads'
-                    ? 'border-brand-orange text-brand-orange'
-                    : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
-                }`}
-              >
-                <Package className="w-4 h-4" />
-                <span>Search Freight Loads</span>
-              </button>
+            {/* Responsive Tab Switcher & Voice Assistant Button */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 dark:border-slate-700 pb-3 sm:pb-0 mb-6 gap-3">
+              <div className="flex items-center space-x-1 sm:space-x-4 w-full sm:w-auto">
+                <button
+                  type="button"
+                  onClick={() => setSearchTab('trucks')}
+                  className={`flex-1 sm:flex-none flex items-center justify-center space-x-2 pb-2.5 sm:pb-3 px-3 sm:px-4 font-bold text-xs sm:text-sm border-b-2 transition-all cursor-pointer ${
+                    searchTab === 'trucks'
+                      ? 'border-brand-orange text-brand-orange'
+                      : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                  }`}
+                >
+                  <Truck className="w-4 h-4" />
+                  <span>Available Trucks</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSearchTab('loads')}
+                  className={`flex-1 sm:flex-none flex items-center justify-center space-x-2 pb-2.5 sm:pb-3 px-3 sm:px-4 font-bold text-xs sm:text-sm border-b-2 transition-all cursor-pointer ${
+                    searchTab === 'loads'
+                      ? 'border-brand-orange text-brand-orange'
+                      : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                  }`}
+                >
+                  <Package className="w-4 h-4" />
+                  <span>Freight Loads</span>
+                </button>
+              </div>
 
               <button
                 type="button"
                 onClick={() => setIsVoiceModalOpen(true)}
-                className="ml-auto mb-2 flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-brand-orange/20 to-amber-500/20 border border-brand-orange/40 text-brand-orange text-xs font-black hover:scale-105 transition-all shadow-sm"
+                className="w-full sm:w-auto sm:mb-2 flex items-center justify-center space-x-2 px-4 py-2 rounded-xl bg-gradient-to-r from-brand-orange/15 to-amber-500/15 hover:from-brand-orange/25 hover:to-amber-500/25 border border-brand-orange/40 text-brand-orange text-xs font-black transition-all shadow-sm cursor-pointer"
               >
-                <Mic className="w-3.5 h-3.5 animate-pulse text-brand-orange" />
+                <div className="w-5 h-5 rounded-full bg-brand-orange/20 flex items-center justify-center">
+                  <Mic className="w-3.5 h-3.5 animate-pulse text-brand-orange" />
+                </div>
                 <span>ਬੋਲ ਕੇ ਲੱਭੋ • Voice Search</span>
               </button>
             </div>
