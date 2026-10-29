@@ -6,6 +6,7 @@ export interface ParsedVoiceQuery {
   weightTons?: number;
   cargoType?: string;
   vehicleType?: string;
+  englishSummary?: string;
   hindiSummary?: string;
   punjabiSummary?: string;
   rawText: string;
@@ -43,6 +44,16 @@ The user (a truck driver or transporter) said:
 "${trimmed}"
 
 Extract freight search filters from this voice query. Known cities in this corridor include: ${PUNJAB_CORRIDORS.join(', ')}.
+
+CRITICAL PHONETIC & SPEECH-TO-TEXT CORRECTIONS:
+English / Hindi / Punjabi speech recognition frequently mishears North Indian city names:
+- "Louisiana", "Luciana", "Loudhiana", "Ludhiyana" -> "Ludhiana"
+- "Bethesda", "Batinda", "Bhatinda", "बठिंडा", "बटिंडा" -> "Bathinda"
+- "Cana", "Khana", "Ghana", "Khanna", "खाना", "खन्ना" -> "Khanna"
+- "Calendar", "Jalandar", "Jullundur", "ਜਲੰਧਰ" -> "Jalandhar"
+- "Gobindgarh", "Mandi" -> "Mandi Gobindgarh"
+- "Amrit Sar", "Amritsar" -> "Amritsar"
+
 Valid cargo types: AGRICULTURAL, INDUSTRIAL, TEXTILES, STEEL, FMCG, AUTOMOTIVE, GENERAL.
 Valid vehicle types: LIGHT_COMMERCIAL, MEDIUM_DUTY, HEAVY_DUTY, MULTI_AXLE_TRAILER.
 
@@ -53,6 +64,7 @@ Return ONLY a JSON object with this exact structure:
   "weightTons": number or null,
   "cargoType": string or null,
   "vehicleType": string or null,
+  "englishSummary": string,
   "hindiSummary": string,
   "punjabiSummary": string
 }`;
@@ -83,6 +95,7 @@ Return ONLY a JSON object with this exact structure:
               weightTons: parsed.weightTons ? Number(parsed.weightTons) : undefined,
               cargoType: parsed.cargoType || undefined,
               vehicleType: parsed.vehicleType || undefined,
+              englishSummary: parsed.englishSummary || `Searching loads for: ${trimmed}`,
               hindiSummary: parsed.hindiSummary || `Khoja ja raha hai: ${trimmed}`,
               punjabiSummary: parsed.punjabiSummary || `ਲੱਭਿਆ ਜਾ ਰਿਹਾ ਹੈ: ${trimmed}`,
               rawText: trimmed
