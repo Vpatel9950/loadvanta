@@ -189,7 +189,7 @@ router.get('/enquiries', async (_req: Request, res: Response, next: NextFunction
   }
 });
 
-// Real-Time Fleet Radar (All in-transit bookings with live GPS)
+// Real-Time Fleet Radar (All transporter vehicles & in-transit bookings with live GPS)
 router.get('/fleet-radar', async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const activeTrips = await Booking.find({
@@ -200,7 +200,51 @@ router.get('/fleet-radar', async (_req: Request, res: Response, next: NextFuncti
       .populate('transporterId', 'fullName companyName phone city')
       .populate('shipmentId', 'title pickupCity deliveryCity cargoType weightTons');
 
-    res.json({ success: true, data: activeTrips });
+    // Also fetch every vehicle registered by transporters across the platform
+    const allVehicles = await Vehicle.find()
+      .populate('transporterId', 'fullName companyName phone city');
+
+    const activeVehicleIds = new Set(
+      activeTrips
+        .filter((t) => t.vehicleId)
+        .map((t) => (t.vehicleId as any)._id?.toString())
+    );
+
+    const fleetList: any[] = [...activeTrips];
+
+    for (const v of allVehicles) {
+      if (!activeVehicleIds.has(v._id.toString())) {
+        fleetList.push({
+          _id: `vehicle_${v._id}`,
+          bookingNumber: 'AVAILABLE',
+          status: v.isAvailable ? 'AVAILABLE' : 'STANDBY',
+          agreedPriceInr: 0,
+          vehicleId: {
+            _id: v._id,
+            registrationNumber: v.registrationNumber,
+            vehicleType: v.vehicleType,
+            bodyType: v.bodyType,
+            capacityTons: v.capacityTons,
+            currentCity: v.currentCity,
+            lastKnownLocation: v.lastKnownLocation
+          },
+          transporterId: v.transporterId,
+          shipmentId: {
+            title: `Stationed at ${v.currentCity || 'Punjab Depot'} (${v.capacityTons}T ${v.bodyType || v.vehicleType})`,
+            pickupCity: v.currentCity || 'Ludhiana',
+            deliveryCity: 'Open for Freight',
+            cargoType: 'Standby Fleet',
+            weightTons: v.capacityTons
+          },
+          liveTracking: v.lastKnownLocation?.latitude && v.lastKnownLocation?.longitude ? {
+            lastKnownLocation: v.lastKnownLocation,
+            isActive: false
+          } : undefined
+        });
+      }
+    }
+
+    res.json({ success: true, data: fleetList });
   } catch (error) {
     next(error);
   }
